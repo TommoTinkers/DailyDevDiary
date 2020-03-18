@@ -10,6 +10,8 @@ namespace DailyDevDiary.Utils
 		Help,
 		BlockQuote,
 		OrderedList,
-		UnOrderedList
+		UnOrderedList,
+		CodeBlock,
+		EndDay
 	}
 }

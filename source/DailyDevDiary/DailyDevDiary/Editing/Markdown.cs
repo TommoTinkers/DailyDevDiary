@@ -21,5 +21,10 @@ namespace DailyDevDiary.Editing
 		{
 			return $"> {CreateParagraph(text)}";
 		}
+
+		public static string CreateCodeBlock(string text)
+		{
+			return $"`{CreateParagraph(text)}`";
+		}
 	}
 }

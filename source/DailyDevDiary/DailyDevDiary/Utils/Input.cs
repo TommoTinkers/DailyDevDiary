@@ -28,6 +28,7 @@ namespace DailyDevDiary.Utils
 			{"c", new Command(Options.CodeBlock, "Inserts a block of code") },
 			{"o", new Command(Options.OrderedList, "Inserts an ordered list.")},
 			{"u", new Command(Options.UnOrderedList, "Inserts an un-ordered list.")},
+			{"e", new Command(Options.EndDay, "Inserts an end of day summary.")},
 			{"q", new Command(Options.Quit, "Quits the application.")},
 			{"h", new Command(Options.Help, "Shows this list of commands.")}
 		};

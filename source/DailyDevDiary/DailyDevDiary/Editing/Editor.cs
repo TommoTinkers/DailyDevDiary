@@ -13,6 +13,7 @@ namespace DailyDevDiary.Editing
 		private const string paragraphPrompt = "Creating paragraph (Type away!) -> ";
 		private const string blockQuotePrompt = "Type an inspiring quote -> ";
 		private const string orderedListPrompt = "Please enter an item ('end' to stop) -> ";
+		private const string codeBlockPrompt = "Please type some code ->";
 
 		private readonly Dictionary<Options, Action> commandHandlers;
 
@@ -22,16 +23,31 @@ namespace DailyDevDiary.Editing
 			commandHandlers	= new Dictionary<Options, Action>
 			{
 				{ Options.Help, HandleHelpCommand},
-				{ Options.Paragraph, CreateParagraph},
+				{ Options.Paragraph, () => CreateParagraph()},
 				{ Options.Subtitle, CreateSubtitle},
 				{ Options.Title, CreateTitle},
 				{ Options.BlockQuote, CreateBlockQuote},
 				{ Options.OrderedList, () =>  CreateList("1.")},
-				{ Options.UnOrderedList, () =>  CreateList("*")}
+				{ Options.UnOrderedList, () =>  CreateList("*")},
+				{ Options.CodeBlock, CreateCodeBlock},
+				{ Options.EndDay, CreateEndOfDaySummary}
 			};
 		}
 
-		public void Start()
+		public void Start(bool isNewFile)
+		{
+			if (!isNewFile)
+			{
+				Console.WriteLine("Continuing where we left off.");
+			}
+			else
+			{
+				CreateStartOfDaySummary();
+			}
+			StartNormalEditingLoop();
+		}
+
+		private void StartNormalEditingLoop()
 		{
 			while (true)
 			{
@@ -41,7 +57,7 @@ namespace DailyDevDiary.Editing
 				{
 					commandHandlers[option]();
 				}
-				
+
 				switch (option)
 				{
 					case Options.Unknown:
@@ -64,16 +80,21 @@ namespace DailyDevDiary.Editing
 			WriteLine(subtitle);
 		}
 
+		private void CreateCodeBlock()
+		{
+			WriteLine(Markdown.CreateCodeBlock(Input.GetLine(codeBlockPrompt)));
+		}
+
 		private void CreateBlockQuote()
 		{
 			WriteLine(Markdown.CreateBlockQuote(Input.GetLine(blockQuotePrompt)));
 		}
 
-		private void CreateParagraph()
+		private void CreateParagraph(bool includeTimestamp = true, string prompt = paragraphPrompt)
 		{
-			var paragraph = Markdown.CreateParagraph(Input.GetLine(paragraphPrompt));
+			var paragraph = Markdown.CreateParagraph(Input.GetLine(prompt));
 			var time = DateTime.Now.ToShortTimeString();
-			WriteLine($"[{time}] {paragraph}");
+			WriteLine(includeTimestamp ? $"[{time}] {paragraph}" : paragraph);
 		}
 
 		private void CreateTitle()
@@ -106,6 +127,28 @@ namespace DailyDevDiary.Editing
 		private void WriteLine(string text)
 		{
 			Write($"{text}\n");
+		}
+
+		private void CreateStartOfDaySummary()
+		{
+			Console.WriteLine("This is a new file. Get ready to enjoy your day!");
+			Console.WriteLine("Lets set up the title.");
+			CreateTitle();
+			CreateParagraph(false, "Write a small introduction");
+			Console.WriteLine("Write some goals for the day!");
+			commandHandlers[Options.UnOrderedList]();
+		}
+
+		private void CreateEndOfDaySummary()
+		{
+			Console.WriteLine("Well done on completing another day!");
+			WriteLine(Markdown.CreateSubtitle("Summary"));
+			CreateParagraph(false,"Write a short summary of your day -> ");
+			WriteLine(Markdown.CreateSubtitle("Goals for tomorrow"));
+			Console.WriteLine("What are your goals for tomorrow?");
+			commandHandlers[Options.UnOrderedList]();
+			Console.WriteLine("You can continue writing this diary if you want, or use (q) to quit.");
+			Console.WriteLine("Enjoy the rest of your day!");
 		}
 	}
 }

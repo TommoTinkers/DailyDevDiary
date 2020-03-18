@@ -13,7 +13,8 @@ namespace DailyDevDiary
 			var date = todaysDate.Day;
 			var year = todaysDate.Year;
 			var month = todaysDate.Month;
-			return $"{day}_{date}_{month}_{year}.md";
+			
+			return $"Dev_Diary_{day}_{date}_{month}_{year}.md";
 		}
 
 		public static void AppendToFile(string filename, string text)
