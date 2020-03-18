@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 using DailyDevDiary.Utils;
 
 namespace DailyDevDiary.Editing
@@ -11,9 +12,18 @@ namespace DailyDevDiary.Editing
 		private const string subtitlePrompt = "Please enter a subtitle -> ";
 		private const string paragraphPrompt = "Creating paragraph (Type away!)-> ";
 		
+		private readonly Dictionary<Options, Action> commandHandlers;
+		
 		public Editor(Action<string> write)
 		{
 			Write = write;
+			commandHandlers	= new Dictionary<Options, Action>
+			{
+				{ Options.Help, HandleHelpCommand},
+				{ Options.Paragraph, CreateParagraph},
+				{ Options.Subtitle, CreateSubtitle},
+				{ Options.Title, CreateTitle}
+			};
 		}
 
 		public void Start()
@@ -22,22 +32,15 @@ namespace DailyDevDiary.Editing
 			{
 				var option = Input.GetOption();
 
+				if (commandHandlers.ContainsKey(option))
+				{
+					commandHandlers[option]();
+				}
+				
 				switch (option)
 				{
-					case Options.Help:
-						HandleHelpCommand();
-						break;
 					case Options.Unknown:
 						HandleUnknownCommand();
-						break;
-					case Options.Title:
-						CreateTitle();
-						break;
-					case Options.Subtitle:
-						CreateSubtitle();
-						break;
-					case Options.Paragraph:
-						CreateParagraph();
 						break;
 					case Options.Quit:
 					{
