@@ -8,9 +8,9 @@ namespace DailyDevDiary
 		public static void Main(string[] args)
 		{
 			var filename = FileUtils.CreateFilename();
-			Action<string> FileWriter = text => { FileUtils.AppendToFile(filename, text); };
+			Action<string> fileWriter = text => { FileUtils.AppendToFile(filename, text); };
 
-			new Editor(FileWriter).Start();
+			new Editor(fileWriter).Start();
 		}
 	}
 }
