@@ -19,20 +19,21 @@ namespace DailyDevDiary.Utils
 	
 	public static class Input
 	{
-		private const string optionPrompt = "Please type a letter (h) for help -> ";
-		
 		private static readonly Dictionary<string, Command> commands = new Dictionary<string, Command>
 		{
 			{"t", new Command(Options.Title, "Inserts a document title.")},
 			{"s", new Command(Options.Subtitle, "Inserts a subtitle.")},
 			{"p", new Command(Options.Paragraph, "Inserts a timestamped paragraph.")},
 			{"b", new Command(Options.BlockQuote, "Inserts a blockquote.")},
+			{"c", new Command(Options.CodeBlock, "Inserts a block of code") },
 			{"o", new Command(Options.OrderedList, "Inserts an ordered list.")},
 			{"u", new Command(Options.UnOrderedList, "Inserts an un-ordered list.")},
 			{"q", new Command(Options.Quit, "Quits the application.")},
 			{"h", new Command(Options.Help, "Shows this list of commands.")}
 		};
-		
+
+		private const string optionPrompt = "Please type a letter (h) for help -> ";
+
 		public static Options GetOption()
 		{
 			var input = GetCharacter(optionPrompt);
@@ -50,8 +51,19 @@ namespace DailyDevDiary.Utils
 
 		public static string GetLine(string prompt)
 		{
-			Console.Write(prompt);
-			return Console.ReadLine();
+			while (true)
+			{
+				Console.Write(prompt);
+				var input = Console.ReadLine();
+				if (string.IsNullOrWhiteSpace(input))
+				{
+					Console.WriteLine("Please enter something.");
+				}
+				else
+				{
+					return input;
+				}
+			}
 		}
 
 		public static string GetHelp()
