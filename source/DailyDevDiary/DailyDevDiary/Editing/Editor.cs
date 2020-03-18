@@ -10,10 +10,12 @@ namespace DailyDevDiary.Editing
 		
 		private const string titlePrompt = "Please enter a title -> ";
 		private const string subtitlePrompt = "Please enter a subtitle -> ";
-		private const string paragraphPrompt = "Creating paragraph (Type away!)-> ";
-		
+		private const string paragraphPrompt = "Creating paragraph (Type away!) -> ";
+		private const string blockQuotePrompt = "Type an inspiring quote -> ";
+		private const string orderedListPrompt = "Please enter an item ('end' to stop) -> ";
+
 		private readonly Dictionary<Options, Action> commandHandlers;
-		
+
 		public Editor(Action<string> write)
 		{
 			Write = write;
@@ -22,7 +24,10 @@ namespace DailyDevDiary.Editing
 				{ Options.Help, HandleHelpCommand},
 				{ Options.Paragraph, CreateParagraph},
 				{ Options.Subtitle, CreateSubtitle},
-				{ Options.Title, CreateTitle}
+				{ Options.Title, CreateTitle},
+				{ Options.BlockQuote, CreateBlockQuote},
+				{ Options.OrderedList, () =>  CreateList("1.")},
+				{ Options.UnOrderedList, () =>  CreateList("*")}
 			};
 		}
 
@@ -43,9 +48,7 @@ namespace DailyDevDiary.Editing
 						HandleUnknownCommand();
 						break;
 					case Options.Quit:
-					{
 						return;
-					}
 				}
 			}
 		}
@@ -61,6 +64,11 @@ namespace DailyDevDiary.Editing
 			WriteLine(subtitle);
 		}
 
+		private void CreateBlockQuote()
+		{
+			WriteLine(Markdown.CreateBlockQuote(Input.GetLine(blockQuotePrompt)));
+		}
+
 		private void CreateParagraph()
 		{
 			var paragraph = Markdown.CreateParagraph(Input.GetLine(paragraphPrompt));
@@ -72,13 +80,27 @@ namespace DailyDevDiary.Editing
 		{
 			var title = Markdown.CreateTitle(Input.GetLine(titlePrompt));
 			WriteLine(title);
-			return;
+		}
+
+		private void CreateList(string listMarker)
+		{
+			while (true)
+			{
+				var item = Input.GetLine(orderedListPrompt);
+				if (item.ToLower().Equals("end"))
+				{
+					break;
+				}
+
+				WriteLine($"{listMarker} {item}");
+			}
+			WriteLine(string.Empty);
+			WriteLine(string.Empty);
 		}
 
 		private static void HandleUnknownCommand()
 		{
 			Console.WriteLine("I do not know how to do that.");
-			return;
 		}
 
 		private void WriteLine(string text)

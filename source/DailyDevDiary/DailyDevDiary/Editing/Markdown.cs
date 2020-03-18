@@ -16,5 +16,10 @@ namespace DailyDevDiary.Editing
 		{
 			return $"{text}\n";
 		}
+
+		public static string CreateBlockQuote(string text)
+		{
+			return $"> {CreateParagraph(text)}";
+		}
 	}
 }

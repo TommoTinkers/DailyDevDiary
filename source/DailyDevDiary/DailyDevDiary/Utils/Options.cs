@@ -7,6 +7,9 @@ namespace DailyDevDiary.Utils
 		Quit,
 		Paragraph,
 		Subtitle,
-		Help
+		Help,
+		BlockQuote,
+		OrderedList,
+		UnOrderedList
 	}
 }

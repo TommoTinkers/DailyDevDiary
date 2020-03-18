@@ -24,8 +24,11 @@ namespace DailyDevDiary.Utils
 		private static readonly Dictionary<string, Command> commands = new Dictionary<string, Command>
 		{
 			{"t", new Command(Options.Title, "Inserts a document title.")},
-			{"p", new Command(Options.Paragraph, "Inserts a timestamped paragraph.")},
 			{"s", new Command(Options.Subtitle, "Inserts a subtitle.")},
+			{"p", new Command(Options.Paragraph, "Inserts a timestamped paragraph.")},
+			{"b", new Command(Options.BlockQuote, "Inserts a blockquote.")},
+			{"o", new Command(Options.OrderedList, "Inserts an ordered list.")},
+			{"u", new Command(Options.UnOrderedList, "Inserts an un-ordered list.")},
 			{"q", new Command(Options.Quit, "Quits the application.")},
 			{"h", new Command(Options.Help, "Shows this list of commands.")}
 		};
